@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.QueryCallback
 import com.badlogic.gdx.physics.box2d.World
 import com.zurui.flotilla.global.Constants
+import ktx.collections.toGdxArray
 
 class AStarGraph(world: World,
                  private val tileMap: TiledMap,
@@ -56,7 +57,7 @@ class AStarGraph(world: World,
             for (x in 0..width) {
                 val node: Node = graph[y][x] ?: continue
 
-                if (!node.isWall()) {
+                if (!node.isWall) {
                     // Add Connection for each valid neighbor
                     for (offset in neighborhood) {
                         val neighborX: Int = node.x + offset.x.toInt()
@@ -65,7 +66,7 @@ class AStarGraph(world: World,
                         if (neighborX in 0..(width - 1) && neighborY >= 0 && neighborY < height) {
                             val neighbor: Node = graph[neighborY][neighborX] ?: continue
 
-                            if (!neighbor.isWall()) {
+                            if (!neighbor.isWall) {
                                 node.getConnections().add(neighbor)
                             }
                         }

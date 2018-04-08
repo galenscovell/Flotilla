@@ -7,7 +7,5 @@ interface State<StateComponent> {
 
     fun update(delta: Float, stateComponent: StateComponent)
 
-    fun getName(): String
-
     fun getId(): Int
 }

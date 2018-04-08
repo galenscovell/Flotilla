@@ -108,8 +108,8 @@ object Resources {
 
         for (i in indicesAndTimes) {
             val textureName: String = when (direction) {
-                Direction.NONE -> "${name.toLowerCase()}-${agentState.getName()}_${i.first}"
-                else -> "${name.toLowerCase()}-${agentState.getName()}-${direction.toString().toLowerCase()}_${i.first}"
+                Direction.NONE -> "${name.toLowerCase()}-${agentState}_${i.first}"
+                else -> "${name.toLowerCase()}-${agentState}-${direction.toString().toLowerCase()}_${i.first}"
             }
 
             if (atlas != null) {

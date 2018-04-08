@@ -10,10 +10,11 @@ class Node(val x: Int, val y: Int) : Location<Vector2> {
     private var costFromStart: Double = 0.0
     private var totalCost: Double = 0.0
     private val connections: MutableList<Node> = mutableListOf()
-    private var isWall: Boolean = false
-    private var isMarked: Boolean = false
     private var orientation: Float = 0f
     private val position: Vector2 = Vector2(x.toFloat(), y.toFloat())
+
+    var isWall: Boolean = false
+    var isMarked: Boolean = false
 
 
     /********************
@@ -35,10 +36,6 @@ class Node(val x: Int, val y: Int) : Location<Vector2> {
         return connections
     }
 
-    fun isWall(): Boolean {
-        return isWall
-    }
-
     override fun toString(): String {
         return "Node ($x, $y)"
     }
@@ -55,7 +52,7 @@ class Node(val x: Int, val y: Int) : Location<Vector2> {
         totalCost = cost
     }
 
-    fun setParent(node: Node) {
+    fun setParent(node: Node?) {
         parent = node
     }
 
