@@ -9,7 +9,8 @@ import com.badlogic.gdx.physics.box2d.*
 import com.zurui.flotilla.entities.components.BodyComponent
 
 class CollisionSystem(family: Family, world: World) : IteratingSystem(family), ContactListener {
-    private val bodyMapper: ComponentMapper<BodyComponent> = ComponentMapper.getFor(BodyComponent::class.java)
+    private val bodyMapper: ComponentMapper<BodyComponent> =
+            ComponentMapper.getFor(BodyComponent::class.java)
 
     // These are grabbed from the world contact listener methods
     private var collisionEntityA: Entity? = null

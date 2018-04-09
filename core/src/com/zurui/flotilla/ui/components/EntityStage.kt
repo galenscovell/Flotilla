@@ -2,12 +2,14 @@ package com.zurui.flotilla.ui.components
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.zurui.flotilla.environment.Physics
 import com.zurui.flotilla.global.Constants
+import com.zurui.flotilla.global.EntityManager
 import com.zurui.flotilla.ui.screens.GameScreen
 
 class EntityStage(private val gameScreen: GameScreen,
@@ -22,7 +24,6 @@ class EntityStage(private val gameScreen: GameScreen,
     private var minCamY: Float = 0f
     private var maxCamX: Float = 0f
     private var maxCamY: Float = 0f
-    private var playerBody: Body? = null
 
     // Box2D has a limit on velocity of 2.0 units per step
     // The max speed is 120m/s at 60fps
@@ -30,7 +31,9 @@ class EntityStage(private val gameScreen: GameScreen,
     private var accumulator: Float = 0f
 
     init {
-        // EntityManager.setup(entitySpriteBatch, controllerHandler, physics.getWorld(), this)
+        EntityManager.setup(entitySpriteBatch, physics.getWorld(), this)
+
+        EntityManager.creator?.createPlayerShip(Vector2(1f, 1f))
     }
 
 
@@ -45,7 +48,7 @@ class EntityStage(private val gameScreen: GameScreen,
             accumulator -= timeStep
 
             entitySpriteBatch.begin()
-            // EntityManager.update(delta)
+            EntityManager.update(delta)
             entitySpriteBatch.end()
 
             gameScreen.updateFpsCounter()
@@ -76,13 +79,11 @@ class EntityStage(private val gameScreen: GameScreen,
         maxCamY = minCamY + entityCamera.viewportHeight * entityCamera.zoom
 
         entityCamera.update()
-
-        centerCameraOnPlayer()
     }
 
-    private fun centerCameraOnPlayer() {
-        lerpPos.x = playerBody?.position?.x ?: 0f
-        lerpPos.y = playerBody?.position?.y ?: 0f
+    private fun centerCameraOnEntity(entityBody: Body) {
+        lerpPos.x = entityBody.position.x
+        lerpPos.y = entityBody.position.y
 
         entityCamera.position.lerp(lerpPos, 0.1f)
     }

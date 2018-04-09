@@ -15,9 +15,12 @@ import com.zurui.flotilla.ui.components.EntityStage
 class RenderSystem(family: Family,
                    private val spriteBatch: SpriteBatch,
                    private val entityStage: EntityStage) : SortedIteratingSystem(family, ZComparator()) {
-    private val bodyMapper: ComponentMapper<BodyComponent> = ComponentMapper.getFor(BodyComponent::class.java)
-    private val sizeMapper: ComponentMapper<SizeComponent> = ComponentMapper.getFor(SizeComponent::class.java)
-    private val textureMapper: ComponentMapper<TextureComponent> = ComponentMapper.getFor(TextureComponent::class.java)
+    private val bodyMapper: ComponentMapper<BodyComponent> =
+            ComponentMapper.getFor(BodyComponent::class.java)
+    private val sizeMapper: ComponentMapper<SizeComponent> =
+            ComponentMapper.getFor(SizeComponent::class.java)
+    private val textureMapper: ComponentMapper<TextureComponent> =
+            ComponentMapper.getFor(TextureComponent::class.java)
 
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -28,15 +31,14 @@ class RenderSystem(family: Family,
         val sizeComponent: SizeComponent = sizeMapper.get(entity)
         val texture: TextureRegion = textureMapper.get(entity).region
 
-        // Cull entities outside of camera
+        // Only render entities currently within the camera view
         if (entityStage.inCamera(currentX, currentY)) {
-            // Render sprite with physics body more towards the bottom for overlapping
             spriteBatch.draw(
-                    texture,
-                    currentX - (sizeComponent.width / 2),
-                    currentY - (sizeComponent.height / 3),
-                    sizeComponent.width,
-                    sizeComponent.height
+                texture,
+                currentX - (sizeComponent.width / 2),
+                currentY - (sizeComponent.height / 2),
+                sizeComponent.width,
+                sizeComponent.height
             )
         }
     }

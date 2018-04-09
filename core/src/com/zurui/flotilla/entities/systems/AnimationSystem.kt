@@ -11,9 +11,12 @@ import com.zurui.flotilla.entities.components.TextureComponent
 import com.zurui.flotilla.graphics.Animation
 
 class AnimationSystem(family: Family) : IteratingSystem(family) {
-    private val animationMapper: ComponentMapper<AnimationComponent> = ComponentMapper.getFor(AnimationComponent::class.java)
-    private val stateMapper: ComponentMapper<StateComponent> = ComponentMapper.getFor(StateComponent::class.java)
-    private val textureMapper: ComponentMapper<TextureComponent> = ComponentMapper.getFor(TextureComponent::class.java)
+    private val animationMapper: ComponentMapper<AnimationComponent> =
+            ComponentMapper.getFor(AnimationComponent::class.java)
+    private val stateMapper: ComponentMapper<StateComponent> =
+            ComponentMapper.getFor(StateComponent::class.java)
+    private val textureMapper: ComponentMapper<TextureComponent> =
+            ComponentMapper.getFor(TextureComponent::class.java)
 
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

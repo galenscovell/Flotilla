@@ -107,21 +107,18 @@ object Resources {
         val keyFrames = com.badlogic.gdx.utils.Array<AnimationFrame>()
 
         for (i in indicesAndTimes) {
-            val textureName: String = when (direction) {
-                Direction.NONE -> "${name.toLowerCase()}-${agentState}_${i.first}"
-                else -> "${name.toLowerCase()}-${agentState}-${direction.toString().toLowerCase()}_${i.first}"
-            }
+            // eg. "ships/geometric_right_idle_0"
+            val textureName = "${name.toLowerCase()}_" +
+                    "${direction.toString().toLowerCase()}_" +
+                    "${agentState.toString().toLowerCase()}_" +
+                    "${i.first}"
 
             if (atlas != null) {
                 keyFrames.add(AnimationFrame(atlas!!.findRegion(textureName), i.second))
             }
         }
 
-        val keyName: String = when (direction) {
-            Direction.NONE -> "$agentState"
-            else -> "$agentState-$direction"
-        }
-
+        val keyName = "$agentState-$direction"
         map[keyName] = Animation(keyFrames, loop)
     }
 

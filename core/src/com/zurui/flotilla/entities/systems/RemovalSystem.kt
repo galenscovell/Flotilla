@@ -10,7 +10,8 @@ import com.zurui.flotilla.entities.components.BodyComponent
 import com.zurui.flotilla.global.EntityManager
 
 class RemovalSystem(family: Family, private val world: World) : IteratingSystem(family) {
-    private val bodyMapper: ComponentMapper<BodyComponent> = ComponentMapper.getFor(BodyComponent::class.java)
+    private val bodyMapper: ComponentMapper<BodyComponent> =
+            ComponentMapper.getFor(BodyComponent::class.java)
 
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

@@ -49,7 +49,7 @@ object EntityManager {
         creator = EntityCreator(engine, world)
 
         // Handles animations
-        val animationSystem: AnimationSystem = AnimationSystem(
+        val animationSystem = AnimationSystem(
             Family.all(
                 AnimationComponent::class.java,
                 StateComponent::class.java,
@@ -58,14 +58,14 @@ object EntityManager {
         )
 
         // Handles collisions
-        val collisionSystem: CollisionSystem = CollisionSystem(
+        val collisionSystem = CollisionSystem(
             Family.all(
                 BodyComponent::class.java
             ).get(), world
         )
 
         // Handles removal of entities
-        val removalSystem: RemovalSystem = RemovalSystem(
+        val removalSystem = RemovalSystem(
             Family.all(
                 BodyComponent::class.java,
                 RemovalComponent::class.java
@@ -73,7 +73,7 @@ object EntityManager {
         )
 
         // Handles entity graphics
-        val renderSystem: RenderSystem = RenderSystem(
+        val renderSystem = RenderSystem(
             Family.all(
                 BodyComponent::class.java,
                 SizeComponent::class.java,

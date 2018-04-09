@@ -2,7 +2,7 @@ name=atlas
 filename=
 output=.
 
-alias=true
+alias=false
 alphaThreshold=0
 debug=false
 duplicatePadding=false
@@ -31,12 +31,12 @@ limitMemory=true
 useIndexes=false
 
 scaleFactors=[{suffix:"",factor:1}]
-inputFiles=[{path:../working/packed/player,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false},{path:../working/packed/corn,type:Input,dirFilePrefix:null,recursive:false,flattenPaths:false}]
+inputFiles=[{path:../working/ships,type:Input,dirFilePrefix:ships/,recursive:false,flattenPaths:false}]
 
 
 -PROJ-
 
-version=4.5.0
+version=4.6.0
 fileTypeType=png
 fileTypeData={encoding:RGBA8888}
 previewBackgroundColor=ffffffff

@@ -18,6 +18,19 @@ class LoadScreen(private val root: Game) : AbstractScreen(root) {
     private val loadingTable: Table = Table()
 
     init {
+        // Start loading resources
+        Resources.load()
+
+        // Prepare loading animation
+        uiStage.root.color.a = 0f
+        uiStage.root.addAction(
+            moveTo(-Constants.UI_X * 1.4f, 0f) then
+            parallel(
+                moveTo(0f, 0f, 0.5f) then fadeIn(0.5f)
+            )
+        )
+
+        // Construct loading UI elements
         loadingMain.setFillParent(true)
         loadingImage.setScaling(Scaling.fillY)
 
@@ -46,19 +59,6 @@ class LoadScreen(private val root: Game) : AbstractScreen(root) {
 
             uiStage.root.addAction(sequence)
         }
-    }
-
-    override fun show() {
-        Resources.load()
-        uiStage.root.color.a = 0f
-
-        val sequence: Action =
-            moveTo(-Constants.UI_X * 1.4f, 0f) then
-            parallel(
-                moveTo(0f, 0f, 0.5f) then fadeIn(0.5f)
-            )
-
-        uiStage.root.addAction(sequence)
     }
 
 
