@@ -13,23 +13,25 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.zurui.flotilla.Game
 import com.zurui.flotilla.global.Constants
 import com.zurui.flotilla.global.Resources
+import com.zurui.flotilla.processing.input.MouseAndKeyboardHandler
 import com.zurui.flotilla.ui.components.EntityStage
 
 class GameScreen(root: Game) : AbstractScreen(root) {
     private val tweenManager: TweenManager = TweenManager()
 
     private val inputMultiplexer = InputMultiplexer()
-//    private val controllerHandler = ControllerHandler(this)
     private var paused: Boolean = false
 
     private val fpsLabel: Label = Label("FPS", Resources.labelSmallStyle)
 
     private var entityStage: EntityStage
+    private val mouseAndKeyboardHandler: MouseAndKeyboardHandler
 
     init {
         val entityCamera = OrthographicCamera(Constants.SCREEN_X, Constants.SCREEN_Y)
         val entityViewport = FitViewport(Constants.SCREEN_X, Constants.SCREEN_Y, entityCamera)
         entityStage = EntityStage(this, entityViewport, entityCamera, SpriteBatch())
+        mouseAndKeyboardHandler = MouseAndKeyboardHandler(entityStage.physics.getWorld(), entityCamera)
 
         val mainTable = Table()
         mainTable.setFillParent(true)
@@ -69,6 +71,11 @@ class GameScreen(root: Game) : AbstractScreen(root) {
     /**********************
      *     Dynamic UI    *
      **********************/
+    fun enableInput() {
+        inputMultiplexer.addProcessor(uiStage)
+        inputMultiplexer.addProcessor(mouseAndKeyboardHandler)
+        Gdx.input.inputProcessor = inputMultiplexer
+    }
 
 
     /**********************
@@ -90,9 +97,7 @@ class GameScreen(root: Game) : AbstractScreen(root) {
     }
 
     override fun show() {
-        Gdx.input.inputProcessor = uiStage
-//        Controllers.clearListeners()
-//        Controllers.addListener(controllerHandler)
+        enableInput()
     }
 
     override fun resize(width: Int, height: Int) {
@@ -101,6 +106,6 @@ class GameScreen(root: Game) : AbstractScreen(root) {
 
     override fun dispose() {
         super.dispose()
-//        entityStage.dispose()
+        entityStage.dispose()
     }
 }

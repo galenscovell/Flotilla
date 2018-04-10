@@ -16,7 +16,7 @@ class EntityStage(private val gameScreen: GameScreen,
                   private val entityViewport: FitViewport,
                   private val entityCamera: OrthographicCamera,
                   private val entitySpriteBatch: SpriteBatch) : Stage(entityViewport, entitySpriteBatch) {
-    private val physics: Physics = Physics()
+    val physics: Physics = Physics()
 
     // For camera
     private val lerpPos: Vector3 = Vector3 (0f, 0f, 0f)

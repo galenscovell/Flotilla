@@ -7,12 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.physics.box2d.World
 import com.zurui.flotilla.entities.EntityCreator
 import com.zurui.flotilla.entities.components.*
-import com.zurui.flotilla.entities.components.dynamic.InteractiveComponent
 import com.zurui.flotilla.entities.components.dynamic.RemovalComponent
-import com.zurui.flotilla.entities.systems.AnimationSystem
-import com.zurui.flotilla.entities.systems.CollisionSystem
-import com.zurui.flotilla.entities.systems.RemovalSystem
-import com.zurui.flotilla.entities.systems.RenderSystem
+import com.zurui.flotilla.entities.components.dynamic.SelectedComponent
+import com.zurui.flotilla.entities.systems.*
 import com.zurui.flotilla.ui.components.EntityStage
 
 object EntityManager {
@@ -27,15 +24,15 @@ object EntityManager {
         engine.update(delta)
     }
 
-    fun addInteractiveComponent(entity: Entity) {
-        if (entity.getComponent(InteractiveComponent::class.java) == null) {
-            entity.add(InteractiveComponent())
-        }
-    }
-
     fun addRemovalComponent(entity: Entity) {
         if (entity.getComponent(RemovalComponent::class.java) == null) {
             entity.add(RemovalComponent())
+        }
+    }
+
+    fun addSelectedComponent(entity: Entity) {
+        if (entity.getComponent(SelectedComponent::class.java) == null) {
+            entity.add(SelectedComponent())
         }
     }
 
@@ -72,13 +69,22 @@ object EntityManager {
             ).get(), world
         )
 
-        // Handles entity graphics
+        // Handles entity graphics processing
         val renderSystem = RenderSystem(
             Family.all(
                 BodyComponent::class.java,
                 SizeComponent::class.java,
                 TextureComponent::class.java
             ).get(), entitySpriteBatch, entityStage
+        )
+
+        // Handles entity selection by player
+        val selectionSystem = SelectionSystem(
+            Family.all(
+                BodyComponent::class.java,
+                SelectedComponent::class.java,
+                StateComponent::class.java
+            ).get(), world
         )
 
         // Add systems to engine in priority order
