@@ -8,8 +8,10 @@ import com.badlogic.gdx.physics.box2d.Body
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.zurui.flotilla.environment.Physics
+import com.zurui.flotilla.environment.Tilemap
 import com.zurui.flotilla.global.Constants
 import com.zurui.flotilla.global.EntityManager
+import com.zurui.flotilla.processing.pathfinding.PathfindDebugRenderer
 import com.zurui.flotilla.ui.screens.GameScreen
 
 class EntityStage(private val gameScreen: GameScreen,
@@ -17,6 +19,9 @@ class EntityStage(private val gameScreen: GameScreen,
                   private val entityCamera: OrthographicCamera,
                   private val entitySpriteBatch: SpriteBatch) : Stage(entityViewport, entitySpriteBatch) {
     val physics: Physics = Physics()
+    val tileMap: Tilemap = Tilemap(physics.world, "test")
+
+    private val pathfindDebugRenderer = PathfindDebugRenderer(tileMap.aStarGraph)
 
     // For camera
     private val lerpPos: Vector3 = Vector3 (0f, 0f, 0f)
@@ -31,9 +36,9 @@ class EntityStage(private val gameScreen: GameScreen,
     private var accumulator: Float = 0f
 
     init {
-        EntityManager.setup(entitySpriteBatch, physics.getWorld(), this)
+        EntityManager.setup(entitySpriteBatch, physics.world, this)
 
-        EntityManager.creator?.createPlayerShip(Vector2(1f, 1f))
+        EntityManager.creator?.createPlayerShip(Vector2(2f, 2f))
     }
 
 
@@ -43,20 +48,25 @@ class EntityStage(private val gameScreen: GameScreen,
     fun render(delta: Float) {
         val frameTime: Float = Math.min(delta, 0.25f)
         accumulator += frameTime
+
+        tileMap.renderBaseLayer()
+
         while (accumulator > timeStep) {
             physics.update(timeStep)
             accumulator -= timeStep
 
             entitySpriteBatch.begin()
             EntityManager.update(delta)
+            pathfindDebugRenderer.render(entitySpriteBatch)
             entitySpriteBatch.end()
-
-            gameScreen.updateFpsCounter()
         }
+
+        tileMap.renderOverlapLayer()
+        gameScreen.updateFpsCounter()
 
         updateCamera()
         entitySpriteBatch.projectionMatrix = entityCamera.combined
-
+        tileMap.updateCamera(entityCamera)
         physics.debugRender(entityCamera.combined)
     }
 

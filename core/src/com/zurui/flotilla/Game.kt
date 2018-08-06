@@ -18,6 +18,11 @@ class Game : KtxGame<Screen>() {
     override fun create() {
         uiSpriteBatch = SpriteBatch()
         loadScreen = LoadScreen(this)
+
+        if (screens.containsKey(LoadScreen::class.java)) {
+            removeScreen(LoadScreen::class.java)
+        }
+
         addScreen(loadScreen!!)
         setScreen<LoadScreen>()
     }
@@ -30,6 +35,11 @@ class Game : KtxGame<Screen>() {
 
     fun setGameScreen() {
         gameScreen = GameScreen(this)
+
+        if (screens.containsKey(GameScreen::class.java)) {
+            removeScreen(GameScreen::class.java)
+        }
+
         addScreen(gameScreen!!)
         setScreen<GameScreen>()
     }

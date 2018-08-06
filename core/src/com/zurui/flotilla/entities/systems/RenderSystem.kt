@@ -4,12 +4,13 @@ import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.SortedIteratingSystem
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.zurui.flotilla.entities.ZComparator
-import com.zurui.flotilla.entities.components.BodyComponent
-import com.zurui.flotilla.entities.components.SizeComponent
-import com.zurui.flotilla.entities.components.TextureComponent
+import com.zurui.flotilla.entities.components.*
+import com.zurui.flotilla.global.enums.ShaderType
 import com.zurui.flotilla.ui.components.EntityStage
 
 class RenderSystem(family: Family,
@@ -19,8 +20,18 @@ class RenderSystem(family: Family,
             ComponentMapper.getFor(BodyComponent::class.java)
     private val sizeMapper: ComponentMapper<SizeComponent> =
             ComponentMapper.getFor(SizeComponent::class.java)
+    private val shaderMapper: ComponentMapper<ShaderComponent> =
+            ComponentMapper.getFor(ShaderComponent::class.java)
     private val textureMapper: ComponentMapper<TextureComponent> =
             ComponentMapper.getFor(TextureComponent::class.java)
+
+    private val selectionShader: ShaderProgram
+
+    init {
+        val vertexShader = Gdx.files.internal("shaders/selection_color/basic.vert").readString()
+        val fragmentShader = Gdx.files.internal("shaders/selection_color/white.frag").readString()
+        selectionShader = ShaderProgram(vertexShader, fragmentShader)
+    }
 
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -33,6 +44,11 @@ class RenderSystem(family: Family,
 
         // Only render entities currently within the camera view
         if (entityStage.inCamera(currentX, currentY)) {
+            when (shaderMapper.get(entity).shaderType) {
+                ShaderType.SELECTION -> spriteBatch.shader = selectionShader
+                ShaderType.NONE -> spriteBatch.shader = null
+            }
+
             spriteBatch.draw(
                 texture,
                 currentX - (sizeComponent.width / 2),
@@ -40,6 +56,8 @@ class RenderSystem(family: Family,
                 sizeComponent.width,
                 sizeComponent.height
             )
+
+            spriteBatch.shader = null
         }
     }
 

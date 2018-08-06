@@ -11,7 +11,7 @@ class SteeringComponent(body: Body,
                         boundingRadius: Float,
                         maxLinearSpeed: Float,
                         maxLinearAcceleration: Float) : Component {
-    private val steerable: BaseSteerable = BaseSteerable(
+    val steerable: BaseSteerable = BaseSteerable(
         body, boundingRadius, maxLinearSpeed, maxLinearAcceleration, 0f, 0f
     )
 

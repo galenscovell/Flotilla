@@ -18,7 +18,7 @@ class BodyComponent(entity: Entity,
                     private val soft: Boolean,
                     isPlayerOwned: Boolean = false) : Component {
     val body: Body
-    private val fixture: Fixture
+    val fixture: Fixture
 
     init {
         body = createBody()
@@ -48,7 +48,7 @@ class BodyComponent(entity: Entity,
         // val shape: PolygonShape = new PolygonShape
         // shape.setAsBox(size / 3, size / 3)
 
-        return body.circle(radius = size /3) {
+        return body.circle(radius = size / 3) {
             density = 1f
             friction = 0.1f
             filter {

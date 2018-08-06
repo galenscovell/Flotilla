@@ -48,11 +48,14 @@ class EntityCreator(private val engine: Engine, private val world: World) {
         entity.add(AnimationComponent(animationMap.toMap()))
         entity.add(bodyComponent)
         entity.add(MovementComponent())
+        entity.add(PathComponent())
         entity.add(PlayerOwnedComponent())
-        entity.add(SizeComponent(Constants.SMALL_ENTITY_SIZE, Constants.MEDIUM_ENTITY_SIZE))
-        entity.add(TextureComponent())
+        entity.add(SelectableComponent())
+        entity.add(ShaderComponent())
+        entity.add(SizeComponent(Constants.MEDIUM_ENTITY_SIZE, Constants.MEDIUM_ENTITY_SIZE))
         entity.add(StateComponent(ShipAgent.IDLE, Direction.DOWN))
         entity.add(SteeringComponent(bodyComponent.body, Constants.MEDIUM_ENTITY_SIZE, 10f, 10f))
+        entity.add(TextureComponent())
 
         engine.addEntity(entity)
         return entity

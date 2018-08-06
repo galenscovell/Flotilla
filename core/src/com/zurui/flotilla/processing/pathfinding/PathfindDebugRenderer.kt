@@ -9,10 +9,16 @@ class PathfindDebugRenderer(aStarGraph: AStarGraph) {
 
 
     fun render(batch: SpriteBatch) {
-        for (row: Array<Node?> in graph.getGraph()) {
+        for (row: Array<Node?> in graph.graph) {
             for (node: Node? in row) {
                 if (node != null && node.isMarked) {
-                    // batch.draw(Resources.spTest3, node.position.x, node.position.y, Constants.TILE_SIZE, Constants.TILE_SIZE)
+                    batch.draw(
+                        Resources.generateSprite("tiles/test_pathfind"),
+                        node.position.x,
+                        node.position.y,
+                        Constants.TILE_SIZE,
+                        Constants.TILE_SIZE
+                    )
                 }
             }
         }

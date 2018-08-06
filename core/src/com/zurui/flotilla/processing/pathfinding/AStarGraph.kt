@@ -1,18 +1,16 @@
 package com.zurui.flotilla.processing.pathfinding
 
-import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.Fixture
 import com.badlogic.gdx.physics.box2d.QueryCallback
 import com.badlogic.gdx.physics.box2d.World
 import com.zurui.flotilla.global.Constants
-import ktx.collections.toGdxArray
 
 class AStarGraph(world: World,
-                 private val tileMap: TiledMap,
-                 private var width: Int,
-                 private var height: Int) {
-    private val graph: Array<Array<Node?>> = Array(width) { arrayOfNulls<Node>(height) }
+                 private val cols: Int,
+                 private val rows: Int) {
+    val graph: Array<Array<Node?>> = Array(cols) { arrayOfNulls<Node>(rows) }
+
     private var wall: Boolean = false
 
     private val neighborhood: List<Vector2> = listOf(
@@ -36,8 +34,8 @@ class AStarGraph(world: World,
     private val callback: GraphWorldCallback = GraphWorldCallback()
 
     init {
-        for (y in (height - 1) downTo 0) {
-            for (x in 0..width) {
+        for (y in (cols - 1) downTo 0) {
+            for (x in 0 .. (rows - 1)) {
                 graph[y][x] = Node(x, y)
                 wall = false
                 world.QueryAABB(
@@ -53,8 +51,8 @@ class AStarGraph(world: World,
             }
         }
 
-        for (y in (height - 1) downTo 0) {
-            for (x in 0..width) {
+        for (y in (cols - 1) downTo 0) {
+            for (x in 0 .. (rows - 1)) {
                 val node: Node = graph[y][x] ?: continue
 
                 if (!node.isWall) {
@@ -63,11 +61,11 @@ class AStarGraph(world: World,
                         val neighborX: Int = node.x + offset.x.toInt()
                         val neighborY: Int = node.y + offset.y.toInt()
 
-                        if (neighborX in 0..(width - 1) && neighborY >= 0 && neighborY < height) {
+                        if (neighborX in 0..(rows - 1) && neighborY >= 0 && neighborY < cols) {
                             val neighbor: Node = graph[neighborY][neighborX] ?: continue
 
                             if (!neighbor.isWall) {
-                                node.getConnections().add(neighbor)
+                                node.connections.add(neighbor)
                             }
                         }
                     }
@@ -80,26 +78,13 @@ class AStarGraph(world: World,
     /********************
      *       Get       *
      ********************/
-    fun getWidth(): Int {
-        return width
-    }
-
-    fun getHeight(): Int {
-        return height
-    }
-
-    fun getNodeAt(x: Int, y: Int): Node? {
+    fun getNode(x: Int, y: Int): Node? {
         return graph[y][x]
     }
 
-    fun getNodeAt(x: Float, y: Float): Node? {
+    fun getNode(x: Float, y: Float): Node? {
         return graph[Math.round(y)][Math.round(x)]
     }
-
-    fun getGraph(): Array<Array<Node?>> {
-        return graph
-    }
-
 
 
     /********************
@@ -108,10 +93,10 @@ class AStarGraph(world: World,
     fun debugPrint() {
         println()
 
-        for (y in (height - 1) downTo 0) {
+        for (y in (cols - 1) downTo 0) {
             println()
 
-            for (x in 0..width) {
+            for (x in 0 .. (rows - 1)) {
                 print(graph[y][x]?.debugPrint())
             }
         }

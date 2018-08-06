@@ -8,11 +8,11 @@ class Pathfinder(private val graph: AStarGraph) {
     private val maxSearchDistance: Float = 45f
 
 
-    fun resetParents() {
-        for (row: Array<Node?> in graph.getGraph()) {
+    private fun resetParents() {
+        for (row: Array<Node?> in graph.graph) {
             for (node: Node? in row) {
                 if (node != null) {
-                    node.setParent(null)
+                    node.parent = null
                     node.removeMarked()
                 }
             }
@@ -21,8 +21,8 @@ class Pathfinder(private val graph: AStarGraph) {
 
     fun findPath(startNodeVector: Vector2, endNodeVector: Vector2): Array<Node> {
         resetParents()
-        val startNode: Node? = graph.getNodeAt(startNodeVector.x, startNodeVector.y)
-        val endNode: Node? = graph.getNodeAt(endNodeVector.x, endNodeVector.y)
+        val startNode: Node? = graph.getNode(startNodeVector.x, startNodeVector.y)
+        val endNode: Node? = graph.getNode(endNodeVector.x, endNodeVector.y)
 
         if (startNode != null && endNode != null) {
             return findPath(startNode, endNode)
@@ -35,8 +35,8 @@ class Pathfinder(private val graph: AStarGraph) {
         openList.clear()
         closedList.clear()
 
-        startNode.setCostFromStart(0.0)
-        startNode.setTotalCost(startNode.getCostFromStart() + heuristic(startNode, endNode))
+        startNode.costFromStart = 0.0
+        startNode.totalCost = startNode.costFromStart + heuristic(startNode, endNode)
         val startNodePosition: Vector2 = startNode.position
         openList.add(startNode)
 
@@ -53,16 +53,16 @@ class Pathfinder(private val graph: AStarGraph) {
                 openList.removeAt(openList.indexOf(current))
                 closedList.add(current)
 
-                for (neighborNode: Node in current.getConnections()) {
+                for (neighborNode: Node in current.connections) {
                     if (!closedList.contains(neighborNode)) {
-                        neighborNode.setTotalCost(current.getCostFromStart() + heuristic(neighborNode, endNode))
+                        neighborNode.totalCost = current.costFromStart + heuristic(neighborNode, endNode)
 
                         if (!openList.contains(neighborNode)) {
-                            neighborNode.setParent(current)
+                            neighborNode.parent = current
                             openList.add(neighborNode)
-                        } else if (neighborNode.getCostFromStart() < current.getCostFromStart()) {
-                            neighborNode.setCostFromStart(neighborNode.getCostFromStart())
-                            neighborNode.setParent(neighborNode.getParent())
+                        } else if (neighborNode.costFromStart < current.costFromStart) {
+                            neighborNode.costFromStart = neighborNode.costFromStart
+                            neighborNode.parent = neighborNode.parent
                         }
                     }
                 }
@@ -85,7 +85,7 @@ class Pathfinder(private val graph: AStarGraph) {
         var bestNode: Node? = null
 
         for (n: Node in openList) {
-            val totalCost: Double = n.getCostFromStart() + heuristic(n, endNode)
+            val totalCost: Double = n.costFromStart + heuristic(n, endNode)
 
             if (minCost > totalCost) {
                 minCost = totalCost
@@ -100,12 +100,12 @@ class Pathfinder(private val graph: AStarGraph) {
         val path: MutableList<Node> = mutableListOf()
 
         // Skip last node added (destinationNode)
-        var node: Node = n.getParent() ?: return emptyArray()
+        var node: Node = n.parent ?: return emptyArray()
 
-        while (node.getParent() != null) {
+        while (node.parent != null) {
             path.add(node)
             node.makeMarked()
-            node = node.getParent()!!
+            node = node.parent!!
         }
 
         path.reverse()

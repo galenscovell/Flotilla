@@ -31,7 +31,7 @@ class GameScreen(root: Game) : AbstractScreen(root) {
         val entityCamera = OrthographicCamera(Constants.SCREEN_X, Constants.SCREEN_Y)
         val entityViewport = FitViewport(Constants.SCREEN_X, Constants.SCREEN_Y, entityCamera)
         entityStage = EntityStage(this, entityViewport, entityCamera, SpriteBatch())
-        mouseAndKeyboardHandler = MouseAndKeyboardHandler(entityStage.physics.getWorld(), entityCamera)
+        mouseAndKeyboardHandler = MouseAndKeyboardHandler(entityStage.physics.world, entityCamera)
 
         val mainTable = Table()
         mainTable.setFillParent(true)
@@ -98,10 +98,6 @@ class GameScreen(root: Game) : AbstractScreen(root) {
 
     override fun show() {
         enableInput()
-    }
-
-    override fun resize(width: Int, height: Int) {
-        super.resize(width, height)
     }
 
     override fun dispose() {

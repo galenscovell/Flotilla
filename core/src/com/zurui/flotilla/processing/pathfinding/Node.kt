@@ -6,35 +6,17 @@ import com.zurui.flotilla.global.Box2DSteeringUtils
 import com.zurui.flotilla.utils.Box2DLocation
 
 class Node(val x: Int, val y: Int) : Location<Vector2> {
-    private var parent: Node? = null
-    private var costFromStart: Double = 0.0
-    private var totalCost: Double = 0.0
-    private val connections: MutableList<Node> = mutableListOf()
-    private var orientation: Float = 0f
-    private val position: Vector2 = Vector2(x.toFloat(), y.toFloat())
+    var parent: Node? = null
+    var costFromStart: Double = 0.0
+    var totalCost: Double = 0.0
+    val connections: MutableList<Node> = mutableListOf()
+    val pos: Vector2 = Vector2(x.toFloat(), y.toFloat())
 
     var isWall: Boolean = false
     var isMarked: Boolean = false
 
+    private var orientation: Float = 0f
 
-    /********************
-     *       Get       *
-     ********************/
-    fun getCostFromStart(): Double {
-        return costFromStart
-    }
-
-    fun getTotalCost(): Double {
-        return totalCost
-    }
-
-    fun getParent(): Node? {
-        return parent
-    }
-
-    fun getConnections(): MutableList<Node> {
-        return connections
-    }
 
     override fun toString(): String {
         return "Node ($x, $y)"
@@ -44,18 +26,6 @@ class Node(val x: Int, val y: Int) : Location<Vector2> {
     /********************
      *       Set       *
      ********************/
-    fun setCostFromStart(cost: Double) {
-        costFromStart = cost
-    }
-
-    fun setTotalCost(cost: Double) {
-        totalCost = cost
-    }
-
-    fun setParent(node: Node?) {
-        parent = node
-    }
-
     fun makeWall() {
         isWall = true
     }
@@ -82,7 +52,7 @@ class Node(val x: Int, val y: Int) : Location<Vector2> {
      *    Location     *
      ********************/
     override fun getPosition(): Vector2 {
-        return position
+        return pos
     }
 
     override fun getOrientation(): Float {

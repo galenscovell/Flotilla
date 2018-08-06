@@ -6,113 +6,127 @@ filter: Nearest,Nearest
 repeat: none
 ships/geometric_down_idle_0
   rotate: false
-  xy: 2, 70
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_down_move_0
   rotate: false
-  xy: 2, 104
+  xy: 2, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_down_move_1
   rotate: false
-  xy: 36, 138
+  xy: 36, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_down_move_2
   rotate: false
-  xy: 70, 172
+  xy: 70, 104
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_left_idle_0
   rotate: false
-  xy: 70, 206
+  xy: 70, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_left_move_0
   rotate: false
-  xy: 36, 206
+  xy: 70, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_left_move_1
   rotate: false
-  xy: 2, 138
+  xy: 2, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_left_move_2
   rotate: false
-  xy: 36, 172
+  xy: 36, 104
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_right_idle_0
   rotate: false
-  xy: 36, 70
+  xy: 2, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_right_move_0
   rotate: false
-  xy: 36, 104
+  xy: 70, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_right_move_1
   rotate: false
-  xy: 70, 138
+  xy: 2, 104
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_right_move_2
   rotate: false
-  xy: 2, 36
+  xy: 36, 138
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_up_idle_0
   rotate: false
-  xy: 2, 172
+  xy: 36, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_up_move_0
   rotate: false
-  xy: 70, 104
+  xy: 2, 172
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_up_move_1
   rotate: false
-  xy: 2, 2
+  xy: 36, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ships/geometric_up_move_2
   rotate: false
-  xy: 2, 206
+  xy: 2, 138
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+tiles/test_pathfind
+  rotate: false
+  xy: 104, 222
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tiles/test_tile
+  rotate: false
+  xy: 36, 52
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1

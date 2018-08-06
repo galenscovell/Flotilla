@@ -4,7 +4,7 @@ import com.badlogic.gdx.ai.utils.Location
 import com.badlogic.gdx.math.Vector2
 import com.zurui.flotilla.global.Box2DSteeringUtils
 
-class Box2DLocation(val locationPosition: Vector2) : Location<Vector2> {
+class Box2DLocation(private val locationPosition: Vector2) : Location<Vector2> {
     constructor() : this(Vector2())
 
     private var locationOrientation: Float = 0f

@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.Array
 import com.zurui.flotilla.global.Constants
 import com.zurui.flotilla.processing.BaseSteerable
 import com.zurui.flotilla.processing.pathfinding.AStarGraph
+import ktx.box2d.body
+import ktx.box2d.box
+import ktx.box2d.filter
 
 class Tilemap(private val world: World, mapName: String) {
     private val tileMap: TiledMap = TmxMapLoader().load("maps/tilemaps/$mapName.tmx")
@@ -25,7 +28,7 @@ class Tilemap(private val world: World, mapName: String) {
     private val baseLayers: IntArray = intArrayOf(0, 1)
     private val overlapLayers: IntArray = intArrayOf(2)
 
-    private var aStarGraph: AStarGraph
+    val aStarGraph: AStarGraph
 
     init {
         val prop: MapProperties = tileMap.properties
@@ -34,48 +37,48 @@ class Tilemap(private val world: World, mapName: String) {
         val tileWidth: Int = prop.get("tilewidth", Int::class.java)
         val tileHeight: Int = prop.get("tileheight", Int::class.java)
 
-        println("$mapWidth, $mapHeight, $tileWidth, $tileHeight")
+        println("Map: ($mapWidth, $mapHeight), Tile: ($tileWidth, $tileHeight)")
 
         // Find boundary collision objects
-        val boundaryObjectLayer: MapLayer = tileMap.layers.get("BoundaryObjects")
-        val boundaryObjects: Array<RectangleMapObject> =
-                boundaryObjectLayer.objects.getByType(RectangleMapObject::class.java)
+        val boundaryObjectLayer: MapLayer? = tileMap.layers.get("BoundaryObjects")
+        val boundaryObjects: Array<RectangleMapObject>? =
+            boundaryObjectLayer?.objects?.getByType(RectangleMapObject::class.java)
 
-        for (rmo: RectangleMapObject in boundaryObjects) {
-            val rect: Rectangle = rmo.rectangle
-            createCollisionBody(
-                rect.x / Constants.PIXEL_PER_METER, rect.y / Constants.PIXEL_PER_METER,
-                rect.width / Constants.PIXEL_PER_METER, rect.height / Constants.PIXEL_PER_METER
-            )
+        if (boundaryObjects != null) {
+            for (rmo: RectangleMapObject in boundaryObjects) {
+                val rect: Rectangle = rmo.rectangle
+                createCollisionBody(
+                    rect.x / Constants.PIXEL_PER_METER, rect.y / Constants.PIXEL_PER_METER,
+                    rect.width / Constants.PIXEL_PER_METER, rect.height / Constants.PIXEL_PER_METER
+                )
+            }
         }
 
         // Find prop collision objects
-        val propObjectLayer: MapLayer = tileMap.layers.get("PropObjects")
-        val propObjects: Array<RectangleMapObject> =
-                propObjectLayer.objects.getByType(RectangleMapObject::class.java)
+        val propObjectLayer: MapLayer? = tileMap.layers.get("PropObjects")
+        val propObjects: Array<RectangleMapObject>? =
+                propObjectLayer?.objects?.getByType(RectangleMapObject::class.java)
 
-        for (rmo: RectangleMapObject in propObjects) {
-            val rect: Rectangle = rmo.rectangle
-            val rmoBody: Body = createCollisionBody(
-                rect.x / Constants.PIXEL_PER_METER, rect.y / Constants.PIXEL_PER_METER,
-                rect.width / Constants.PIXEL_PER_METER, rect.height / Constants.PIXEL_PER_METER
-            )
+        if (propObjects != null) {
+            for (rmo: RectangleMapObject in propObjects) {
+                val rect: Rectangle = rmo.rectangle
+                val rmoBody: Body = createCollisionBody(
+                    rect.x / Constants.PIXEL_PER_METER, rect.y / Constants.PIXEL_PER_METER,
+                    rect.width / Constants.PIXEL_PER_METER, rect.height / Constants.PIXEL_PER_METER
+                )
 
-            propSteerables += BaseSteerable(rmoBody, rect.width / Constants.PIXEL_PER_METER)
+                propSteerables += BaseSteerable(rmoBody, rect.width / Constants.PIXEL_PER_METER)
+            }
         }
 
         // Assemble AStarGraph for pathfinding
-        aStarGraph = AStarGraph(world, tileMap, mapWidth, mapHeight)
+        aStarGraph = AStarGraph(world, mapWidth, mapHeight)
     }
 
 
     /********************
      *       Get       *
      ********************/
-    fun getAStarGraph(): AStarGraph {
-        return aStarGraph
-    }
-
     fun getPropSteerables(): List<Steerable<Vector2>> {
         return propSteerables.toList()
     }
@@ -109,26 +112,22 @@ class Tilemap(private val world: World, mapName: String) {
      *    Creation     *
      ********************/
     private fun createCollisionBody(rx: Float, ry: Float, width: Float, height: Float): Body {
-        val bodyDef = BodyDef()
-        bodyDef.type = BodyDef.BodyType.StaticBody
-        bodyDef.fixedRotation = true
-        bodyDef.angularDamping = 1f
-        bodyDef.position.set(rx + width / 2, ry + height / 2)
+        val body = world.body {
+            fixedRotation = true
+            angularDamping = 1f
+            linearDamping = 0.1f
+            position.set(rx + width / 2, ry + height / 2)
+            type = BodyDef.BodyType.StaticBody
+        }
 
-        val body: Body = world.createBody(bodyDef)
-
-        val shape = PolygonShape()
-        shape.setAsBox(width / 2, height / 2)
-
-        val fixtureDef = FixtureDef()
-        fixtureDef.shape = shape
-        fixtureDef.density = 1f
-        fixtureDef.friction = 0.1f
-        fixtureDef.filter.categoryBits = Constants.WALL_CATEGORY
-        fixtureDef.filter.maskBits = Constants.WALL_MASK
-
-        val fixture = body.createFixture(fixtureDef)
-        shape.dispose()
+        body.box(width / 2, height / 2) {
+            density = 1f
+            friction = 0.1f
+            filter {
+                categoryBits = Constants.WALL_CATEGORY
+                maskBits = Constants.WALL_MASK
+            }
+        }
 
         return body
     }
